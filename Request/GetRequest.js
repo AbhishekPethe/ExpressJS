@@ -5,10 +5,15 @@ const app = express();
 const PORT = process.env.PORT || 3000
 
 const mockUsers = [
-    { id: 1, name: "a", age: 20 },
-    { id: 2, name: "b", age: 21 },
-    {id : 3, name : "c" , age : 22}
-]
+  { id: 1, username: "anson", displayName: "Anson" },
+  { id: 2, username: "jack", displayName: "Jack" },
+  { id: 3, username: "adam", displayName: "Adam" },
+  { id: 4, username: "tina", displayName: "Tina" },
+  { id: 5, username: "jason", displayName: "Jason" },
+  { id: 6, username: "henry", displayName: "Henry" },
+  { id: 7, username: "marilyn", displayName: "Marilyn" },
+];
+
 
 app.listen(PORT, () => {
     console.log(`Running on PORT ${PORT}`)
@@ -29,16 +34,30 @@ app.get("/api/products", (request, response) => {
     ])
 })
 
-app.get("/api/users", (request , response) => {
-    response.send([
-        { id: 1, name: "a", age: 20 },
-        { id: 2, name: "b", age: 21 },
-        {id : 3, name : "c" , age : 22}
-    ])
+
+// Query Parameters
+// localhost:3000/products?key1=value1&key2=value2
+app.get("/api/users", (request, response) => {
+    console.log(request.query);
+    const { filter, value } = request.query
+    console.log(filter , value);
+    
+    //only if both params are present
+    if (filter && value) {
+         
+        const arr = mockUsers.filter((user) => user[filter].includes(value))
+        if (arr.length>0) {
+            return response.send(arr)
+        }
+        return response.sendStatus(404)
+    }
+    
+    return response.send(mockUsers)
 })
 
 
 // Route Parameters 
+// localhost:3000/products/4
 app.get("/api/users/:id", (request , response) => {
     console.log(request.params); // {id : '1'} , notice that id is in string form
     const paramsId = parseInt(request.params.id)
@@ -60,5 +79,3 @@ app.get("/api/users/:id", (request , response) => {
 })
 
 
-// Query Parameters
-// localhost:3000/products?key1=value1&key2=value2
