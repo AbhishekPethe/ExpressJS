@@ -9,3 +9,5 @@
 - That's where the withMessage() method comes
 
 - withMessage() method sets the error message for the previous validator
+
+- we can also add a schema for validating the repeating code ( check utils )
