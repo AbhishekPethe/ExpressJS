@@ -21,16 +21,21 @@ app.listen(PORT, () => {
     console.log(`Server is running on PORT ${PORT}`);
 })
 
+app.get("/api/users", (request, response) => {
+    response.send(mockUsers)
+})
+
 app.get("/api/users/:id", (request, response) => {
     const { body, params: { id } } = request
-    
     const paramsID = parseInt(id)
+    
+   
 
     if (isNaN(paramsID)) return response.send(400)
     
     const findUser = mockUsers.find((user) => user.id === paramsID)
 
-    if (!findUser) return response.send(404)
+    if (!findUser) return response.sendStatus(404)
     
     return response.send(findUser)
 
@@ -43,6 +48,12 @@ app.delete("/api/users/:id", (request, response) => {
 
     if (isNaN(paramsID)) return response.sendStatus(400)
 
+    const findUserIndex = mockUsers.findIndex((user) => user.id === paramsID)
     
+    if(findUserIndex === -1) return response.sendStatus(404)
+
+    const deleteItem = mockUsers.splice(findUserIndex, 1)
+    
+    response.send(deleteItem)
 
 })
